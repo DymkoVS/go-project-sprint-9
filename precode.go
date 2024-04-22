@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
@@ -44,7 +43,7 @@ func main() {
 	chIn := make(chan int64)
 
 	// 3. Создание контекста
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	//	var mutex sync.Mutex
@@ -55,8 +54,8 @@ func main() {
 
 	// генерируем числа, считая параллельно их количество и сумму
 	go Generator(ctx, chIn, func(i int64) {
-		atomic.AddInt64(&inputSum, i)
-		atomic.AddInt64(&inputCount, 1)
+		inputSum += i
+		inputCount++
 	})
 
 	const NumOut = 5 // количество обрабатывающих горутин и каналов
